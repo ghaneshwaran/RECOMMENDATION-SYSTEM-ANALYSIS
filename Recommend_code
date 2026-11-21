@@ -1,0 +1,120 @@
+import pandas as pd
+from sklearn.preprocessing import StandardScaler
+import seaborn as sns
+import matplotlib.pyplot as plt
+import numpy as np
+
+df = pd.read_csv(r'C:\Users\DELL\OneDrive - Kumaraguru College of Technology\Desktop\spotify_songs.csv')
+print("Original shape:", df.shape)
+df = df.drop_duplicates()
+audio_features = [
+    'danceability', 'energy', 'loudness', 'speechiness',
+    'acousticness', 'instrumentalness', 'liveness',
+    'valence', 'tempo', 'duration_ms'
+]
+
+df = df.dropna(subset=audio_features)
+irrelevant_columns = [
+    'track_id', 'track_album_id', 'playlist_id', 'track_album_release_date'
+]
+
+df = df.drop(columns=[col for col in irrelevant_columns if col in df.columns])
+scaler = StandardScaler()
+df[audio_features] = scaler.fit_transform(df[audio_features])
+print("Cleaned shape:", df.shape)
+df.to_csv(r'C:\Users\DELL\OneDrive - Kumaraguru College of Technology\Desktop.csv', index=False)
+df.head()
+df.tail()
+
+# Set seaborn style
+sns.set(style="whitegrid")
+
+# 1. Distribution of Danceability
+plt.figure()
+sns.histplot(df['danceability'], bins=30, kde=True)
+plt.title("Distribution of Danceability")
+plt.xlabel("Danceability")
+plt.ylabel("Count")
+plt.show()
+
+# 2. Energy vs Danceability
+plt.figure()
+sns.scatterplot(x='danceability', y='energy', data=df)
+plt.title("Energy vs Danceability")
+plt.xlabel("Danceability")
+plt.ylabel("Energy")
+plt.show()
+
+# 3. Tempo vs Energy
+plt.figure()
+sns.scatterplot(x='tempo', y='energy', data=df)
+plt.title("Tempo vs Energy")
+plt.xlabel("Tempo (BPM)")
+plt.ylabel("Energy")
+plt.show()
+
+# 4. Genre-wise Popularity
+plt.figure()
+sns.barplot(x='playlist_genre', y='track_popularity', data=df, estimator='mean')
+plt.title("Average Track Popularity by Genre")
+plt.xlabel("Genre")
+plt.ylabel("Average Popularity")
+plt.show()
+
+
+plt.figure(figsize=(10, 8))
+corr = df[audio_features].corr()
+sns.heatmap(corr, annot=True, fmt=".2f")
+plt.title("Correlation Heatmap of Audio Features")
+plt.show()
+
+
+df.replace([np.inf, -np.inf], np.nan, inplace=True)
+sns.set_theme(style="whitegrid")
+
+plt.figure(figsize=(10,6))
+for feature in audio_features[:4]:  # first 4 for clarity
+    sns.scatterplot(x=df[feature], y=df['track_popularity'], alpha=0.3, label=feature)
+
+plt.title("Track Popularity vs Audio Features")
+plt.xlabel("Feature Value")
+plt.ylabel("Track Popularity")
+plt.legend()
+plt.show()
+
+genre_features = df.groupby('playlist_genre')[audio_features].mean()
+
+plt.figure(figsize=(10,6))
+genre_features[['danceability', 'energy', 'valence']].plot(kind='bar')
+plt.title("Genre-wise Average Audio Features")
+plt.xlabel("Genre")
+plt.ylabel("Average Value")
+plt.show()
+
+
+plt.figure(figsize=(10,6))
+sns.boxplot(data=df[['tempo', 'loudness', 'duration_ms']])
+plt.title("Outlier Analysis of Selected Features")
+plt.ylabel("Value")
+plt.show()
+
+df[audio_features].hist(bins=30, figsize=(12,8))
+plt.suptitle("Distribution of Audio Features")
+plt.show()
+
+plt.figure(figsize=(6,4))
+sns.histplot(df['track_popularity'], bins=30)
+plt.title("Distribution of Track Popularity")
+plt.xlabel("Popularity")
+plt.ylabel("Count")
+plt.show()
+
+
+plt.figure(figsize=(7,4))
+sns.barplot(x='playlist_genre', y='track_popularity', data=df, estimator=np.mean)
+plt.title("Average Track Popularity by Genre")
+plt.xlabel("Genre")
+plt.ylabel("Average Popularity")
+plt.show()
+
+
