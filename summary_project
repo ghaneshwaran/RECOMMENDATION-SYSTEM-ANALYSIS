@@ -1,0 +1,23 @@
+Spotify Music Recommendation System
+Project Overview
+
+Developed a personalized music recommendation system using Machine Learning techniques to recommend songs based on users' listening behaviour and audio features.
+Objectives
+- Analyze user listening behaviour.
+- Understand music and audio feature patterns.
+- Recommend songs based on user preferences.
+- Improve personalization through recommendation techniques.
+Technologies Used
+- Python
+- K-Nearest Neighbors (KNN)
+- Hybrid Filtering
+- Machine Learning
+- Data Analysis
+Project Workflow
+1. Data Collection: Collected music-related data and audio features.
+2. Data Preprocessing: Cleaned and prepared the dataset.
+3. Feature Analysis: Analyzed audio features and listening behaviour.
+4. Model Development: Applied KNN and hybrid filtering techniques.
+5. Recommendation: Generated personalized music recommendations.
+Project Outcome
+Built a personalized music recommendation engine using KNN and hybrid filtering based on listening behaviour and audio features.
